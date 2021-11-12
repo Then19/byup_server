@@ -8,9 +8,10 @@ def hello_world():  # put application's code here
     return 'Hello, world!'
 
 
-@app.route('/get_messages')
+@app.route('/get_messages', methods=['POST'])
 def get_all_messages():
-    data = get_messages()
+    page = request.form.get('page')
+    data = get_messages(page)
     return {'data': data}
 
 
@@ -18,7 +19,8 @@ def get_all_messages():
 def add_msg():
     name = request.form.get('username')
     msg = request.form.get('message')
+    page = request.form.get('page')
     if name and msg:
-        add_message(name, msg)
+        add_message(name, msg, page)
         return {'status': True}
-    return {'status': False, 'warn': 'какая то ошибка'}
+    return {'status': False, 'warn': 'строки не должны быть пустыми'}
