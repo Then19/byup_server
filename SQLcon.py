@@ -1,4 +1,5 @@
 from app import db
+import datetime
 
 
 class Messages(db.Model):
@@ -6,15 +7,34 @@ class Messages(db.Model):
     username = db.Column(db.String(50), nullable=False)
     message = db.Column(db.Text, nullable=False)
     page = db.Column(db.VARCHAR(50), nullable=False)
+    date_time = db.Column(db.VARCHAR(50), nullable=False)
 
-    def __init__(self, user, msg, page):
+    def __init__(self, user, msg, page, date_time):
         self.username = user
         self.message = msg
         self.page = page
+        self.date_time = date_time
+
+
+class Items(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_name = db.Column(db.String(150), nullable=False)
+    item_description = db.Column(db.Text, nullable=False)
+    item_price = db.Column(db.Integer, nullable=False)
+    img_name = db.Column(db.VARCHAR(50), nullable=False)
+    count = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, item_name, item_description, item_price, img_name, count):
+        self.item_name = item_name
+        self.item_description = item_description
+        self.item_price = item_price
+        self.img_name = img_name
+        self.count = count
 
 
 def add_message(user, msg, page):
-    message = Messages(user, msg, page)
+    date_time = datetime.datetime.now().strftime("%Y/%m/%d %H.%M.%S")
+    message = Messages(user, msg, page, date_time)
     db.session.add(message)
     db.session.commit()
     return message
@@ -22,7 +42,20 @@ def add_message(user, msg, page):
 
 def get_messages(page):
     msg = Messages.query.filter_by(page=page).all()[-75::]
-    return [{'id': i.id, 'name': i.username, 'message': i.message}for i in msg]
+    return [{'id': i.id, 'name': i.username, 'message': i.message, 'time': i.date_time}for i in msg]
+
+
+def get_items():
+    item = Items.query.all()
+    return [{'id': i.id, 'item_name': i.item_name, 'item_description': i.item_description, 'item_price': i.item_price,
+             'img_name': i.img_name, 'count': i.count}for i in item]
+
+
+def add_item(item_name, item_description, item_price, img_name, count):
+    item = Items(item_name, item_description, item_price, img_name, count)
+    db.session.add(item)
+    db.session.commit()
+    return item
 
 
 if __name__ == "__main__":
