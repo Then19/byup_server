@@ -51,6 +51,12 @@ def get_items():
              'img_name': i.img_name, 'count': i.count}for i in item]
 
 
+def get_item(item_id):
+    item = Items.query.filter_by(id=item_id).all()
+    return [{'id': i.id, 'item_name': i.item_name, 'item_description': i.item_description, 'item_price': i.item_price,
+             'img_name': i.img_name, 'count': i.count}for i in item]
+
+
 def add_item(item_name, item_description, item_price, img_name, count):
     item = Items(item_name, item_description, item_price, img_name, count)
     db.session.add(item)

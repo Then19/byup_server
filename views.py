@@ -21,6 +21,12 @@ def get_shop_items():
     return {'data': data}
 
 
+@app.route('/get_item/<string:item_id>', methods=['GET'])
+def get_shop_item(item_id):
+    data = get_item(item_id)
+    return {'data': data}
+
+
 @app.route('/add_message', methods=['POST'])
 def add_msg():
     name = request.form.get('username')
