@@ -1,11 +1,29 @@
-from flask import render_template, request, jsonify, url_for, send_from_directory
+from flask import render_template, request, jsonify, url_for, send_from_directory, session
 from app import app
 from SQLcon import *
+import config
 
 
 @app.route('/')
 def hello_world():
     return 'Hello, world!'
+
+
+@app.route('/login', methods=['GET'])
+def login_get():
+    if session.get('login') == config.key_login:
+        return {'status': True}
+    return {'status': False}
+
+
+@app.route('/login', methods=['POST'])
+def login_set():
+    login = request.form.get('login')
+    psw = request.form.get('psw')
+    if login == config.app_login and psw == config.app_password:
+        session['login'] = config.key_login
+        return {'status': True}
+    return {'status': False}
 
 
 @app.route('/get_messages', methods=['POST'])
@@ -40,13 +58,25 @@ def add_msg():
 
 @app.route('/add_item', methods=['POST'])
 def add_new_item():
-    item_name = request.form.get('item_name')
-    item_description = request.form.get('item_description')
-    item_price = request.form.get('item_price')
-    img_name = request.form.get('img_name')
-    count = request.form.get('count')
-    add_item(item_name, item_description, item_price, img_name, count)
-    return {'status': True}
+    if session.get('login') == config.key_login:
+        item_name = request.form.get('item_name')
+        item_description = request.form.get('item_description')
+        item_price = request.form.get('item_price')
+        img_name = request.form.get('img_name')
+        count = request.form.get('count')
+        if item_name and item_description and item_price and img_name and count:
+            add_item(item_name, item_description, int(item_price), img_name, int(count))
+            return {'status': True}
+    return {'status': False}
+
+
+@app.route('/delete_item', methods=['POST'])
+def delete_item_id():
+    if session.get('login') == config.key_login:
+        item_id = request.form.get('itemID')
+        delete_item(int(item_id))
+        return {'status': True}
+    return {'status': False}
 
 
 @app.route('/get_img/<string:img>')

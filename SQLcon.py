@@ -64,5 +64,10 @@ def add_item(item_name, item_description, item_price, img_name, count):
     return item
 
 
+def delete_item(item_id):
+    Items.query.filter_by(id=item_id).delete()
+    db.session.commit()
+
+
 if __name__ == "__main__":
     db.create_all()
