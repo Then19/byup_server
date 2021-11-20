@@ -86,10 +86,11 @@ def add_offer():
     user_number = request.form.get('user_number', "")
     user_address = request.form.get('user_address', "")
     user_comment = request.form.get('user_comment', "")
+    offer_items = request.form.get('offer_items', "")
     if len(user_firstname) > 0 and len(user_lastname) and len(user_number) > 0 and len(user_address) > 0:
         if len(user_comment) == 0:
             user_comment = "Без комментариев"
-        add_new_offer(user_firstname, user_lastname, str(user_number), user_address, str(user_comment))
+        add_new_offer(user_firstname, user_lastname, str(user_number), user_address, str(user_comment), offer_items)
         return {'status': True}
     return {'status': False}
 

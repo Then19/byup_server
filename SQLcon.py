@@ -39,13 +39,15 @@ class Offers(db.Model):
     user_number = db.Column(db.String(50), nullable=False)
     user_address = db.Column(db.String(150), nullable=False)
     user_comment = db.Column(db.Text, nullable=False)
+    offer_items = db.Column(db.String(150), nullable=False)
 
-    def __init__(self, user_firstname, user_lastname, user_number, user_address, user_comment):
+    def __init__(self, user_firstname, user_lastname, user_number, user_address, user_comment, offer_items):
         self.user_firstname = user_firstname
         self.user_lastname = user_lastname
         self.user_number = user_number
         self.user_address = user_address
         self.user_comment = user_comment
+        self.offer_items = offer_items
 
 
 def add_message(user, msg, page):
@@ -80,8 +82,8 @@ def add_item(item_name, item_description, item_price, img_name, count):
     return item
 
 
-def add_new_offer(user_firstname, user_lastname, user_number, user_address, user_comment):
-    offer = Offers(user_firstname, user_lastname, user_number, user_address, user_comment)
+def add_new_offer(user_firstname, user_lastname, user_number, user_address, user_comment, offer_items):
+    offer = Offers(user_firstname, user_lastname, user_number, user_address, user_comment, offer_items)
     db.session.add(offer)
     db.session.commit()
     return offer
