@@ -79,6 +79,21 @@ def delete_item_id():
     return {'status': False}
 
 
+@app.route('/add_offer', methods=['POST'])
+def add_offer():
+    user_firstname = request.form.get('user_firstname', "")
+    user_lastname = request.form.get('user_lastname', "")
+    user_number = request.form.get('user_number', "")
+    user_address = request.form.get('user_address', "")
+    user_comment = request.form.get('user_comment', "")
+    if len(user_firstname) > 0 and len(user_lastname) and len(user_number) > 0 and len(user_address) > 0:
+        if len(user_comment) == 0:
+            user_comment = "Без комментариев"
+        add_new_offer(user_firstname, user_lastname, str(user_number), user_address, str(user_comment))
+        return {'status': True}
+    return {'status': False}
+
+
 @app.route('/get_img/<string:img>')
 def get_img(img):
     return send_from_directory('static/img', f'{img}.jpg')
