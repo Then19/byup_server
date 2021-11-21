@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify, url_for, send_from_directory, session
+from flask import request, jsonify, send_from_directory
 from app import app
 from SQLcon import *
 import config
@@ -9,23 +9,12 @@ def hello_world():
     return 'Hello, world!'
 
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login_get():
-    status = False
-    if session.get('login') == config.key_login:
-        status = True
-    resp = jsonify({'status': status})
-    resp.headers.add('Access-Control-Allow-Origin', '*')
-    return resp
-
-
-@app.route('/login', methods=['POST'])
-def login_set():
     login = request.form.get('login')
     psw = request.form.get('psw')
     status = False
     if login == config.app_login and psw == config.app_password:
-        session['login'] = config.key_login
         status = True
     resp = jsonify({'status': status})
     resp.headers.add('Access-Control-Allow-Origin', '*')
@@ -72,7 +61,9 @@ def add_msg():
 @app.route('/add_item', methods=['POST'])
 def add_new_item():
     status = False
-    if session.get('login') == config.key_login:
+    login = request.form.get('login')
+    psw = request.form.get('psw')
+    if login == config.app_login and psw == config.app_password:
         item_name = request.form.get('item_name')
         item_description = request.form.get('item_description')
         item_price = request.form.get('item_price')
@@ -89,7 +80,9 @@ def add_new_item():
 @app.route('/delete_item', methods=['POST'])
 def delete_item_id():
     status = False
-    if session.get('login') == config.key_login:
+    login = request.form.get('login')
+    psw = request.form.get('psw')
+    if login == config.app_login and psw == config.app_password:
         item_id = request.form.get('itemID')
         delete_item(int(item_id))
         status = True
@@ -100,7 +93,6 @@ def delete_item_id():
 
 @app.route('/add_offer', methods=['POST'])
 def add_offer():
-
     user_firstname = request.form.get('user_firstname', "")
     user_lastname = request.form.get('user_lastname', "")
     user_number = request.form.get('user_number', "")
