@@ -110,9 +110,9 @@ def add_offer():
     return resp
 
 
-@app.route('/get_offers', methods=['GET'])
+@app.route('/get_offers', methods=['POST'])
 def get_offers_bot():
-    if request.headers.get("bot_auth") == config.auth_bot:
+    if request.form.get("bot_auth", "") == config.auth_bot:
         return jsonify(get_offers())
     return jsonify({'status': False})
 
