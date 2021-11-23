@@ -110,6 +110,13 @@ def add_offer():
     return resp
 
 
+@app.route('/get_offers', methods=['GET'])
+def get_offers_bot():
+    if request.headers.get("bot_auth") == config.auth_bot:
+        return jsonify(get_offers())
+    return jsonify({'status': False})
+
+
 @app.route('/get_img/<string:img>')
 def get_img(img):
     return send_from_directory('static/img', f'{img}.jpg')

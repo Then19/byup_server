@@ -89,6 +89,13 @@ def add_new_offer(user_firstname, user_lastname, user_number, user_address, user
     return offer
 
 
+def get_offers():
+    offers = Offers.query.all()
+    return [{'id': i.id, 'user_firstname': i.user_firstname, 'user_lastname': i.user_lastname,
+             'user_number': i.user_number, 'user_address': i.user_address,
+             'user_comment': i.user_comment, 'offer_items': i.offer_items} for i in offers]
+
+
 def delete_item(item_id):
     Items.query.filter_by(id=item_id).delete()
     db.session.commit()
